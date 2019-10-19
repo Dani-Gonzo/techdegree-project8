@@ -13,6 +13,11 @@ function handler(request) {
     }
 }
 
+// GET home page
+router.get("/", (req, res, next) => {
+    res.redirect("/books")
+});
+
 // GET books list
 router.get("/", handler(async (req, res) => {
     const books = await Book.findAll({order: [["title", "ASC"]]});
