@@ -19,14 +19,14 @@ router.get("/", (req, res, next) => {
 });
 
 // GET books list
-router.get("/", handler(async (req, res) => {
+router.get("/books", handler(async (req, res) => {
     const books = await Book.findAll({order: [["title", "ASC"]]});
-    res.render("books/index", {books, title: "Library Database"});
+    res.render("index", {books, title: "Library Database"});
 }));
 
 // Add new book form
 router.get("/new", (req, res) => {
-    res.render("books/new", {book: {}, title: "New Book"});
+    res.render("new-book", {book: {}, title: "New Book"});
 });
 
 // POST new book
@@ -37,8 +37,8 @@ router.post("/", handler(async (req, res) => {
         res.redirect("/books/" + book.id);
     } catch (err) {
         if (err.name === "SequelizeValidationError") {
-            book = await Book.buidl(req.body);
-            res.render("books/new", {book, errors: err.errors, title: "New Book"});
+            book = await Book.build(req.body);
+            res.render("new-book", {book, errors: err.errors, title: "New Book"});
         } else {
             throw err;
         }
@@ -49,7 +49,7 @@ router.post("/", handler(async (req, res) => {
 router.get("/:id", handler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render("books/show", {book, titke: book.title});
+        res.render("detail", {book, titke: book.title});
     } else {
         res.sendStatus(404);
     }
@@ -59,7 +59,7 @@ router.get("/:id", handler(async (req, res) => {
 router.get("/:id/edit", handler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render("books/edit", {book, title: "Edit Book Information"});
+        res.render("update-book", {book, title: "Edit Book Information"});
     } else {
         res.sendStatus(404);
     }
@@ -80,7 +80,7 @@ router.post("/:id/edit", handler(async (req, res) => {
         if (err.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
             book.id = req.params.id;
-            res.render("books/edit", {book, errors: err.errors, title: "Edit Book Information"});
+            res.render("update-book", {book, errors: err.errors, title: "Edit Book Information"});
         } else {
             throw err;
         }
@@ -91,7 +91,7 @@ router.post("/:id/edit", handler(async (req, res) => {
 router.get("/:id/delete", handler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render("/books/delete", {book, title: "Delete Book"});
+        res.render("delete", {book, title: "Delete Book"});
     } else {
         res.sendStatus(404);
     }
