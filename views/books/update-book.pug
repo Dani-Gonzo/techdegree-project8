@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    head
+        title A Brief History of Time
+        link(href="../public/stylesheets/style.css", rel="stylesheet")
+
+    body
+        h1 Update Book
+        form(action="")
+            p Title:
+                input(type="text" name="title" value="A Brief History of Time")
+            p Author:
+                input(type="text" name="author" placeholder="Stephen Hawking")
+            p Genre:
+                input(type="text" name="genre" placeholder="Non-fiction")
+            p Year:
+                input(type="text" name="year" placeholder="1988")
+            p
+                input(type="submit") Update Book
+            p
+                a.button(href="all_books.html") Cancel
+        
+        form(action="/books/8/delete" method="POST" onsubmit="return confirm('Do you really want to delete this book?')")
+            p 
+                a.button(href="all_books.html") Cancel
+            p
+                input(type="submit") Delete Book

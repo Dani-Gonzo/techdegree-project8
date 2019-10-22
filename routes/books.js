@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const Book = require("../models").Book;
+const Book = require("../models/book").Book;
+const path = require('path');
+
+const app = express();
+
+app.use("/static", express.static(path.join(__dirname, '../public')));
+app.set('view engine', 'pug');
+app.use(router);
 
 // Handler function
 function handler(request) {
@@ -8,9 +15,18 @@ function handler(request) {
         try {
             await request (req, res, next)
         } catch (err) {
-            res.status(500).send(err);
+            res.status(500).render("books/error");
         }
     }
+}
+
+// 404 error handler
+function notFoundHandler(next) {
+    const err = new Error("Not Found");
+    err.status = 404;
+    // Logs error to the console
+    console.log("Sorry, we couldn't find the webpage you were looking for :( Error code:", err.status);
+    next(err);
 }
 
 // GET home page
@@ -46,27 +62,28 @@ router.post("/", handler(async (req, res) => {
 }));
 
 // GET individual book detail
-router.get("/:id", handler(async (req, res) => {
+router.get("/:id", handler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render("detail", {book, titke: book.title});
+        res.render("detail", {book, title: book.title});
     } else {
-        res.sendStatus(404);
+        
+        notFoundHandler(next);
     }
 }));
 
 // Update book info form
-router.get("/:id/edit", handler(async (req, res) => {
+router.get("/:id/edit", handler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
         res.render("update-book", {book, title: "Edit Book Information"});
     } else {
-        res.sendStatus(404);
+        notFoundHandler(next);
     }
 }));
 
 // POST new book info
-router.post("/:id/edit", handler(async (req, res) => {
+router.post("/:id/edit", handler(async (req, res, next) => {
     let book;
     try {
         book = await Book.findByPk(req.params.id);
@@ -74,7 +91,7 @@ router.post("/:id/edit", handler(async (req, res) => {
             await book.update(req.body);
             res.redirect("/books/" + book.id);
         } else {
-            res.sendStatus(404);
+            notFoundHandler(next);
         }
     } catch (err) {
         if (err.name === "SequelizeValidationError") {
@@ -88,24 +105,40 @@ router.post("/:id/edit", handler(async (req, res) => {
 }));
 
 // Delete book form
-router.get("/:id/delete", handler(async (req, res) => {
+router.get("/:id/delete", handler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
         res.render("delete", {book, title: "Delete Book"});
     } else {
-        res.sendStatus(404);
+        notFoundHandler(next);
     }
 }));
 
 // POST book deletion
-router.post("/:id/delete", handler (async (req, res) => {
+router.post("/:id/delete", handler (async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
         await book.destroy();
         res.redirect("/books");
     } else {
-        res.sendStatus(404);
+        notFoundHandler(next);
     }
 }));
 
-module.exports = router;
+// ERROR HANDLING
+// Non-existent path request creates a 404 error
+app.use((req, res, next) => {
+    console.log("here");
+    notFoundHandler(next);
+});
+
+app.use((err, req, res, next) => {
+    res.locals.error = err;
+    if (err.status) {
+        res.status(err.status);
+    }
+    // Uses custom error template for user-friendly error display
+    res.render("books/page-not-found");
+});
+
+app.listen(3000, () => console.log('App listening on port 3000!'));
