@@ -1,13 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Book = require("../models/book").Book;
-const path = require('path');
-
-const app = express();
-
-app.use("/static", express.static(path.join(__dirname, '../public')));
-app.set('view engine', 'pug');
-app.use(router);
+const Book = require("../models").Book;
 
 // Handler function
 function handler(request) {
@@ -15,7 +8,7 @@ function handler(request) {
         try {
             await request (req, res, next)
         } catch (err) {
-            res.status(500).render("books/error");
+            res.status(500).render("error");
         }
     }
 }
@@ -29,13 +22,8 @@ function notFoundHandler(next) {
     next(err);
 }
 
-// GET home page
-router.get("/", (req, res, next) => {
-    res.redirect("/books")
-});
-
 // GET books list
-router.get("/books", handler(async (req, res) => {
+router.get("/", handler(async (req, res) => {
     const books = await Book.findAll({order: [["title", "ASC"]]});
     res.render("index", {books, title: "Library Database"});
 }));
@@ -125,20 +113,7 @@ router.post("/:id/delete", handler (async (req, res, next) => {
     }
 }));
 
-// ERROR HANDLING
-// Non-existent path request creates a 404 error
-app.use((req, res, next) => {
-    console.log("here");
-    notFoundHandler(next);
-});
-
-app.use((err, req, res, next) => {
-    res.locals.error = err;
-    if (err.status) {
-        res.status(err.status);
-    }
-    // Uses custom error template for user-friendly error display
-    res.render("books/page-not-found");
-});
-
-app.listen(3000, () => console.log('App listening on port 3000!'));
+module.exports = {
+    router,
+    notFoundHandler
+}

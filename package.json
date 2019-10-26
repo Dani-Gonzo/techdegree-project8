@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./routes/books.js",
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "pug": "^2.0.4",
     "sequelize": "^5.19.8",
+    "sequelize-cli": "^5.5.1",
     "sqlite3": "^4.1.0"
   }
 }
