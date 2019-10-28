@@ -18,13 +18,13 @@ app.use((req, res, next) => {
     books.notFoundHandler(next);
 });
 
-app.use((err, req, res, next) => {
-    res.locals.error = err;
-    if (err.status) {
-        res.status(err.status);
-    }
-    // Uses custom error template for user-friendly error display
-    res.render("page-not-found");
-});
+// app.use((err, req, res, next) => {
+//     res.locals.error = err;
+//     if (err.status) {
+//         res.status(err.status);
+//     }
+//     // Uses custom error template for user-friendly error display
+//     res.render("page-not-found");
+// });
 
 module.exports = app;

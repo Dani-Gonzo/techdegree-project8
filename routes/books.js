@@ -53,9 +53,8 @@ router.post("/", handler(async (req, res) => {
 router.get("/:id", handler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
-        res.render("detail", {book, title: book.title});
+        res.render("book-detail", {book, title: book.title});
     } else {
-        
         notFoundHandler(next);
     }
 }));
@@ -77,7 +76,7 @@ router.post("/:id/edit", handler(async (req, res, next) => {
         book = await Book.findByPk(req.params.id);
         if (book) {
             await book.update(req.body);
-            res.redirect("/books/" + book.id);
+            res.redirect(`/${book.id}`);
         } else {
             notFoundHandler(next);
         }
