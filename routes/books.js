@@ -76,11 +76,12 @@ router.post("/:id/edit", handler(async (req, res, next) => {
         book = await Book.findByPk(req.params.id);
         if (book) {
             await book.update(req.body);
-            res.redirect(`/${book.id}`);
+            res.redirect(`/books/${book.id}`);
         } else {
             notFoundHandler(next);
         }
     } catch (err) {
+        console.log(err);
         if (err.name === "SequelizeValidationError") {
             book = await Book.build(req.body);
             book.id = req.params.id;
