@@ -4,15 +4,19 @@ block content
 
     body
         h1 New Book
+        if errors
+            ol
+                each val in errors
+                    li= val.message
         form(method="POST")
             p Title:
-                input(type="text" name="title" placeholder="Title")
+                input(type="text" name="title" placeholder="Title" value=book.title)
             p Author:
-                input(type="text" name="author" placeholder="Author")
+                input(type="text" name="author" placeholder="Author" value=book.author)
             p Genre:
-                input(type="text" name="genre" placeholder="Genre")
+                input(type="text" name="genre" placeholder="Genre" value=book.genre)
             p Year:
-                input(type="text" name="year" placeholder="Year")
+                input(type="text" name="year" placeholder="Year" value=book.year)
             p
                 input(type="submit" value="Create New Book")
             p

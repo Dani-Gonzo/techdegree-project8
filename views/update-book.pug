@@ -4,22 +4,20 @@ block content
 
     body
         h1 Update Book
+        if errors
+            ol
+                each val in errors
+                    li= val.message
         form(method="POST")
             p Title:
-                input(type="text" name="title" value=`${book.title}`)
+                input(type="text" name="title" value=book.title)
             p Author:
-                input(type="text" name="author" value=`${book.author}`)
+                input(type="text" name="author" value=book.author)
             p Genre:
-                input(type="text" name="genre" value=`${book.genre}`)
+                input(type="text" name="genre" value=book.genre)
             p Year:
-                input(type="text" name="year" value=`${book.year}`)
+                input(type="text" name="year" value=book.year)
             p
                 input(type="submit" value="Update")
             p
                 a.button(href="/") Cancel
-        
-        //- form(action="/books/8/delete" method="POST" onsubmit="return confirm('Do you really want to delete this book?')")
-        //-     p 
-        //-         a.button(href="all_books.html") Cancel
-        //-     p
-        //-         input(type="submit" value="Delete Book")
