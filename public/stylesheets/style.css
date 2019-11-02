@@ -1,6 +1,11 @@
 body {
   padding: 10px 50px 50px;
   font: 18px "Garamond", serif;
+  background-image: url('../img/backgroundBooks.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 105% -20%;
+  background-size: 45% 125%;
 }
 
 a {
