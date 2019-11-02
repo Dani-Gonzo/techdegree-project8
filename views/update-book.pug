@@ -9,14 +9,18 @@ block content
                 each val in errors
                     li= val.message
         form(method="POST")
-            p Title:
-                input(type="text" name="title" value=book.title)
-            p Author:
-                input(type="text" name="author" value=book.author)
-            p Genre:
-                input(type="text" name="genre" value=book.genre)
-            p Year:
-                input(type="text" name="year" value=book.year)
+            div 
+                label(for="title") Title:
+                input(type="text" name="title" id="title" value=book.title)
+            p 
+                label(for="author") Author:
+                input(type="text" name="author" id="author" value=book.author)
+            p 
+                label(for="genre") Genre:
+                input(type="text" name="genre" id="genre" value=book.genre)
+            p 
+                label(for="year") Year:
+                input(type="text" name="year" id="year" value=book.year)
             p
                 input(type="submit" value="Update")
             p
