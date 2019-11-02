@@ -11,5 +11,7 @@ block content
             p= `Year: ${book.year}`
             p
                 a.button(href=`/books/${book.id}/edit`) Update Book
+            p
+                a.button(href=`/books/${book.id}/delete`) Delete Book
             p    
                 a.button(href="/") Cancel
