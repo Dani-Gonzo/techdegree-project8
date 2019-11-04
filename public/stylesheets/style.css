@@ -8,6 +8,12 @@ body {
   background-size: 45% 125%;
 }
 
+.search {
+  display: flex;
+  justify-content: space-between;
+  max-width: 725px;
+}
+
 a {
   color: #019875;
   text-decoration: none;

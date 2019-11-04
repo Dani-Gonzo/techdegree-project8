@@ -4,8 +4,13 @@ block content
 
     body
         h1 Books
-        p
+        div.search
             a.button(href="/books/new") Create New Book
+            div.searchBar
+                form(method="GET")
+                    input(type="text" name="search" id="search" placeholder="Search...")
+                    input(type="submit" value="Search")
+        br
         table
             thead
                 tr
