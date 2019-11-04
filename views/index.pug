@@ -7,7 +7,7 @@ block content
         div.search
             a.button(href="/books/new") Create New Book
             div.searchBar
-                form(method="GET")
+                form(method="GET" action="/books/search")
                     input(type="text" name="search" id="search" placeholder="Search...")
                     input(type="submit" value="Search")
         br
