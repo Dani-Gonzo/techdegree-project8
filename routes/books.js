@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const {Book} = require("../models");
 const Op = require("sequelize").Op;
+// For limiting number of records displayed at a time
+const pageLimit = 5;
 
 // Handler function
 function handler(request) {
@@ -9,6 +11,7 @@ function handler(request) {
         try {
             await request (req, res, next)
         } catch (err) {
+            console.log(err);
             res.status(500).render("error");
         }
     }
@@ -25,8 +28,12 @@ function notFoundHandler(next) {
 
 // GET books list
 router.get("/", handler(async (req, res) => {
-    const books = await Book.findAll({order: [["title", "ASC"]]});
-    res.render("index", {books, title: "Library Database"});
+    const bookCount = await Book.count();
+    const currentPage = req.query.page === undefined ? 1 : req.query.page;
+    const recordOffset = (currentPage - 1) * pageLimit;
+    const pageCount = bookCount / pageLimit;
+    const books = await Book.findAll({offset: recordOffset, limit: pageLimit, order: [["title", "ASC"]]});
+    res.render("index", {books, title: "Library Database", pagePath: "", query: "", pageCount, currentPage});
 }));
 
 // Add new book form
@@ -52,7 +59,7 @@ router.post("/new", handler(async (req, res) => {
 
 // Search route
 router.get("/search", handler(async (req, res) => {
-    const books = await Book.findAll({where: {
+    const query = {
         [Op.or]: [
             {
                 title: {
@@ -75,8 +82,13 @@ router.get("/search", handler(async (req, res) => {
                 }
             }
         ]
-    }});
-    res.render("index", {books, title: "Search Query"});
+    };
+    const bookCount = await Book.count({where: query});
+    const currentPage = req.query.page === undefined ? 1 : req.query.page;
+    const recordOffset = (currentPage - 1) * pageLimit;
+    const pageCount = Math.ceil(bookCount / pageLimit);
+    const books = await Book.findAll({where: query, offset: recordOffset, limit: pageLimit, order: [["title", "ASC"]]});
+    res.render("index", {books, title: "Search Query", pagePath: "search", query: "&search=" + req.query.search, pageCount, currentPage});
 }));
 
 // GET individual book detail

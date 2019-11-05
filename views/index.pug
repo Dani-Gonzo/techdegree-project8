@@ -1,8 +1,8 @@
 extends layout
 
 block content
-
     body
+    - var n = 1
         h1 Books
         div.search
             a.button(href="/books/new") Create New Book
@@ -26,3 +26,11 @@ block content
                         td= val.author
                         td= val.genre
                         td= val.year
+        div.pages
+            ul
+                while n <= pageCount
+                    li
+                        if n == currentPage
+                            a.button.active(href=`/books/${pagePath}?page=${n++}${query}`)= n-1
+                        else
+                            a.button(href=`/books/${pagePath}?page=${n++}${query}`)= n - 1
