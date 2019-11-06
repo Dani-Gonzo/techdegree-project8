@@ -5,7 +5,7 @@ const Op = require("sequelize").Op;
 // For limiting number of records displayed at a time
 const pageLimit = 5;
 
-// Handler function
+// Server error handler 
 function handler(request) {
     return async (req, res, next) => {
         try {
@@ -28,10 +28,14 @@ function notFoundHandler(next) {
 
 // GET books list
 router.get("/", handler(async (req, res) => {
+    // Count records in database dynamically
     const bookCount = await Book.count();
+    // If page request is undefined, default to 1
     const currentPage = req.query.page === undefined ? 1 : req.query.page;
+    // Make currentPage 0-based so first set of records isn't skipped
     const recordOffset = (currentPage - 1) * pageLimit;
-    const pageCount = bookCount / pageLimit;
+    // Make sure a page and button is displayed for partially-filled pages
+    const pageCount = Math.ceil(bookCount / pageLimit);
     const books = await Book.findAll({offset: recordOffset, limit: pageLimit, order: [["title", "ASC"]]});
     res.render("index", {books, title: "Library Database", pagePath: "", query: "", pageCount, currentPage});
 }));

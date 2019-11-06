@@ -12,7 +12,6 @@ module.exports = (sequelize) => {
                     msg: 'Please provide a value for "title"'
                 },
                 notEmpty: {
-                    // custom error message
                     msg: 'Please provide a value for "title"'
                 }  
             }
@@ -25,7 +24,6 @@ module.exports = (sequelize) => {
                     msg: 'Please provide a value for "author"'
                 },
                 notEmpty: {
-                    // custom error message
                     msg: 'Please provide a value for "author"'
                 }  
             }
