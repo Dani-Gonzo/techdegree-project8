@@ -6,6 +6,8 @@ block content
         h1 Books
         div.search
             a.button(href="/books/new") Create New Book
+            if pagePath
+                a.button(href="/") Home
             div.searchBar
                 form(method="GET" action="/books/search")
                     input(type="text" name="search" id="search" placeholder="Search...")
